@@ -1,0 +1,376 @@
+/* Base styles - optimized for compact view */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    /* Changed primary font to Inter (modern, clean, professional) */
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1a1a1a;
+    height: 100vh;
+    overflow: hidden; 
+    position: relative;
+    padding: 20px; 
+}
+
+/* Neon Northern Lights Animation (for background) */
+.aurora {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.aurora-wave {
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(138, 43, 226, 0.3) 15%,
+        rgba(147, 51, 234, 0.5) 30%,
+        rgba(168, 85, 247, 0.4) 45%,
+        rgba(138, 43, 226, 0.3) 60%,
+        transparent 100%);
+    filter: blur(40px);
+    animation: wave1 12s ease-in-out infinite;
+    opacity: 0.8;
+}
+
+.aurora-wave:nth-child(2) {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(168, 85, 247, 0.4) 20%,
+        rgba(192, 132, 252, 0.6) 40%,
+        rgba(168, 85, 247, 0.5) 60%,
+        rgba(138, 43, 226, 0.3) 80%,
+        transparent 100%);
+    filter: blur(50px);
+    animation: wave2 18s ease-in-out infinite reverse;
+    top: 15%;
+}
+
+.aurora-wave:nth-child(3) {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(147, 51, 234, 0.35) 25%,
+        rgba(168, 85, 247, 0.55) 50%,
+        rgba(147, 51, 234, 0.35) 75%,
+        transparent 100%);
+    filter: blur(45px);
+    animation: wave3 15s ease-in-out infinite;
+    top: 30%;
+}
+
+.aurora-wave:nth-child(4) {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(192, 132, 252, 0.3) 20%,
+        rgba(168, 85, 247, 0.45) 50%,
+        rgba(138, 43, 226, 0.35) 80%,
+        transparent 100%);
+    filter: blur(60px);
+    animation: wave1 20s ease-in-out infinite;
+    top: 50%;
+}
+
+@keyframes wave1 {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0) skewY(2deg);
+    }
+    50% {
+        transform: translateX(-20%) translateY(-30px) skewY(-2deg);
+    }
+}
+
+@keyframes wave2 {
+    0%, 100% {
+        transform: translateX(-30%) translateY(0) skewY(-1deg);
+    }
+    50% {
+        transform: translateX(-60%) translateY(25px) skewY(1deg);
+    }
+}
+
+@keyframes wave3 {
+    0%, 100% {
+        transform: translateX(-40%) translateY(0) skewY(1.5deg);
+    }
+    50% {
+        transform: translateX(-25%) translateY(-20px) skewY(-1.5deg);
+    }
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    height: 100%; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+/* --- MODIFIED BACK BUTTON STYLE --- */
+.back-button {
+    position: absolute;
+    top: 25px; 
+    left: 30px; 
+    padding: 8px 15px;
+    border-radius: 8px;
+    background: #2D2D2D; 
+    border: 2px solid #6d28d9; 
+    color: #a855f7; 
+    font-size: 0.9em; 
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4); 
+}
+
+.back-button:hover {
+    background: #3a3a3a; 
+    color: #c482f7; 
+    border-color: #a855f7;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+    transform: translateY(-2px);
+}
+
+/* Style for the arrow icon/text */
+.back-button .arrow {
+    font-size: 1.2em; 
+    line-height: 1;
+    margin-right: 5px; 
+}
+/* --- END MODIFIED BACK BUTTON STYLE --- */
+
+
+/* --- TRANSFER LAYOUT --- */
+h1 {
+    color: #fff;
+    margin-bottom: 15px; 
+    font-size: 2.0em; 
+    font-weight: 900; 
+    border-bottom: 3px solid rgba(168, 85, 247, 0.5);
+    padding-bottom: 6px; 
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+    text-align: center;
+}
+
+.transfer-grid {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 20px; 
+    max-width: 900px; 
+    width: 100%;
+}
+
+.card {
+    background: rgba(30, 30, 30, 0.95); 
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(168, 85, 247, 0.5); 
+    border-radius: 12px; 
+    padding: 20px; 
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    color: #a855f7;
+    font-size: 1.5em; 
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed rgba(168, 85, 247, 0.4); 
+    font-weight: 700;
+    text-shadow: 0 0 12px rgba(168, 85, 247, 0.8);
+}
+
+/* Form Controls */
+.form-group {
+    margin-bottom: 15px; 
+    padding: 5px 0;
+}
+
+.form-label {
+    display: block;
+    color: #d0d0d0; 
+    font-size: 1.0em; 
+    font-weight: 600; 
+    margin-bottom: 6px; 
+}
+
+.form-control {
+    background: #252525; 
+    border: 1px solid #6d28d9; 
+    border-radius: 4px;
+    padding: 10px 12px;
+    color: #fff;
+    font-size: 1.0em;
+    width: 100%;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #a855f7;
+    box-shadow: 0 0 12px rgba(168, 85, 247, 1); 
+    background: #2c2c2c;
+}
+
+.form-group.amount-input .form-control {
+    font-size: 1.7em; 
+    text-align: right;
+    padding: 12px 15px;
+    font-weight: 700;
+    border-width: 2px;
+}
+
+/* --- REFINED SEGMENTED CONTROL STYLES (Transfer Speed & Security) --- */
+.segmented-control {
+    display: flex;
+    background: #2c2c2c; 
+    border-radius: 8px; /* Smooth radius */
+    border: 1px solid #4a4a4a; /* Subtler default border */
+    overflow: hidden;
+    margin-bottom: 20px; 
+    position: relative;
+}
+
+.segmented-control input {
+    display: none;
+}
+
+.segmented-control label {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0; 
+    color: #c0c0c0;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95em; 
+    border-right: 1px solid #3d3d3d; /* Darker, neater separator */
+    z-index: 2; /* Ensure label is above active indicator */
+}
+
+.segmented-control label:last-child {
+    border-right: none;
+}
+
+/* Active indicator for smooth transition */
+.active-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 50%;
+    background: #a855f7; /* Purple background */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1; /* Below the labels */
+}
+
+/* Move indicator when Standard is checked */
+input#standard:checked ~ .active-indicator {
+    transform: translateX(100%);
+}
+
+/* Style for text inside checked label */
+.segmented-control input:checked + label {
+    color: #fff; /* Ensure text is white on purple background */
+}
+
+
+/* Transfer Summary Card styles remain the same for consistency */
+.summary-details {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    flex-grow: 1;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+    font-size: 0.95em; 
+}
+
+.summary-label {
+    color: #c0c0c0;
+    font-weight: 400;
+}
+
+.summary-value {
+    color: #fff;
+    font-weight: 600;
+}
+
+.summary-item.total-cost {
+    border-top: 2px solid #a855f7;
+    margin-top: 15px; 
+    padding-top: 15px; 
+    font-size: 1.2em; 
+}
+
+.summary-item.total-cost .summary-value {
+    color: #38a169; 
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(56, 161, 105, 0.8);
+}
+
+.action-button {
+    background: #a855f7;
+    color: #fff;
+    border: none;
+    padding: 12px 25px; 
+    border-radius: 6px; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 700;
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.6);
+    margin-top: 15px; 
+    width: 100%;
+    font-size: 1.1em;
+}
+
+.action-button:hover {
+    background: #9333ea;
+    box-shadow: 0 6px 30px rgba(168, 85, 247, 1);
+    transform: translateY(-2px);
+}
+
+/* Purple Success Message */
+.success-message {
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(168, 85, 247, 0.15);
+    border: 1px solid #9333ea;
+    color: #a855f7;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    transition: opacity 0.5s ease;
+    opacity: 0;
+    display: none;
+    font-size: 0.95em;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.7); 
+}
+
+.success-message.visible {
+    opacity: 1;
+    display: block;
+}

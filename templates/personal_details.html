@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='personal_details.css') }}"> 
+</head>
+<body>
+    <div class="aurora">
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            {% if current_user.is_authenticated and current_user.role == 'admin' %}
+                <div style="padding: 20px; font-weight: bold; color: #c4b5fd; font-size: 0.9em; letter-spacing: 1px; text-transform: uppercase;">Admin Console</div>
+                
+                <a class="sidebar-item" href="{{ url_for('admin_dashboard', view='queue') }}">
+                    Queue Review
+                </a>
+                
+                <a class="sidebar-item" href="{{ url_for('admin_dashboard', view='accounts') }}">
+                    Manage Accounts
+                </a>
+                
+                <a class="sidebar-item" href="{{ url_for('admin_dashboard', view='ledger') }}">
+                    Full Ledger
+                </a>
+                
+                <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;"></div>
+                
+                <a class="sidebar-item active" href="{{ url_for('personal_details') }}">
+                    My Details
+                </a>
+                
+                <a class="sidebar-item signout" href="{{ url_for('logout') }}">
+                    Sign Out
+                </a>
+
+            {% else %}
+                <a class="sidebar-item" href="{{ url_for('dashboard') }}">
+                    Dashboard
+                </a>
+                
+                <a class="sidebar-item active" href="{{ url_for('personal_details') }}">
+                    Details
+                </a>
+                
+                <a class="sidebar-item" href="{{ url_for('limit') }}">
+                    Limit
+                </a>
+                
+                <a class="sidebar-item" href="{{ url_for('download_transcript') }}">
+                    Download Transcript
+                </a>
+                
+                <a class="sidebar-item signout" href="{{ url_for('logout') }}">
+                    Sign Out
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="main-content">
+            <h1>👤 Account Details</h1>
+            
+            <div class="details-grid">
+                
+                <div class="details-section">
+                    <div class="card">
+                        <div class="card-title">Account Information</div>
+                        <div class="detail-item">
+                            <span class="detail-label">Account Name:</span>
+                            <span class="detail-value" data-field="username">{{ user.username }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Account Type:</span>
+                            <span class="detail-value purple-highlight" data-field="role">{{ user.role|capitalize }} Account</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Account ID:</span>
+                            <span class="detail-value" data-field="account_id">{{ user.id }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Daily Limit:</span>
+                            <span class="detail-value" data-field="daily_limit">${{ user.daily_limit }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value" data-field="status">Active</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Contact Information</div>
+                        <div class="detail-item">
+                            <span class="detail-label">Phone:</span>
+                            <span class="detail-value" data-field="phone">{{ user.phone }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Address:</span>
+                            <span class="detail-value" data-field="address" style="text-align: right;">{{ user.address }}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value" data-field="email" style="text-align: right;">{{ user.email }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <div class="card profile-card">
+                        <div class="profile-content">
+                            <div class="avatar" id="profileAvatar">{{ user.username[0] }}</div>
+                            <div class="profile-name" id="profileName">{{ user.username }}</div>
+                            <div class="profile-email" id="profileEmail">{{ user.email }}</div>
+                            
+                            <div class="security-details">
+                                <div class="card-title" style="border-bottom: none; font-size: 1.4em; margin-bottom: 5px;">Security Status</div>
+                                 <div class="detail-item" style="border-bottom: none; padding: 5px 0;">
+                                    <span class="detail-label" style="font-size: 1em;">Last Login:</span>
+                                    <span class="detail-value" style="font-size: 1em;">{{ user.last_login }}</span>
+                                </div>
+                                <div class="detail-item" style="border-bottom: none; padding: 5px 0;">
+                                    <span class="detail-label" style="font-size: 1em;">2FA Status:</span>
+                                    <span class="detail-value purple-highlight" style="font-size: 1em;">Enabled</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="action-button" id="editButton">Edit Profile</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" href="{{ url_for('static', filename='notifications.css') }}">
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='personal_details.js') }}"></script>
+</body>
+</html>

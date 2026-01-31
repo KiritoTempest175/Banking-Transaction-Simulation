@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}?v=2">
+</head>
+<body>
+    <div class="aurora">
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+    </div>
+
+    <div class="header">
+        <h1>Banking System</h1>
+    </div>
+
+    <div class="main-wrapper">
+        
+        <div class="robots-stage">
+            <div class="robot robot-fat" id="robot1">
+                <div class="eyes-container">
+                    <div class="eye"><div class="pupil"></div></div>
+                    <div class="eye"><div class="pupil"></div></div>
+                </div>
+                <div class="blush left"></div><div class="blush right"></div>
+                <div class="tear left"></div><div class="tear right"></div>
+                <div class="hand left"></div><div class="hand right"></div>
+            </div>
+
+            <div class="robot robot-thin" id="robot2">
+                <div class="antenna-ball"></div>
+                <div class="eyes-container">
+                    <div class="eye"><div class="pupil"></div></div>
+                    <div class="eye"><div class="pupil"></div></div>
+                </div>
+                <div class="blush left"></div><div class="blush right"></div>
+                <div class="tear left"></div><div class="tear right"></div>
+                <div class="hand left"></div><div class="hand right"></div>
+            </div>
+
+            <div class="robot robot-short" id="robot3">
+                <div class="glasses-frame">
+                    <div class="eye"><div class="pupil"></div></div>
+                    <div class="bridge"></div>
+                    <div class="eye"><div class="pupil"></div></div>
+                </div>
+                <div class="blush left"></div><div class="blush right"></div>
+                <div class="tear left"></div><div class="tear right"></div>
+                <div class="hand left"></div><div class="hand right"></div>
+            </div>
+        </div>
+        <div class="login-container">
+            <form id="loginForm" method="POST" action="/login" autocomplete="off">
+                <div class="input-group">
+                    <label for="username">Login</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="account_id"
+                        placeholder="Enter Account Number"
+                        maxlength="12"
+                        autocomplete="off" 
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label for="password">PIN</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="pin"
+                        placeholder="Enter 4-Digit PIN"
+                        maxlength="4"
+                        autocomplete="new-password"
+                    >
+                </div>
+
+                <button class="login-btn" id="loginBtn">Login</button>
+            </form>
+            <div class="attempts-info" id="attemptsInfo">
+                Attempts remaining: <span id="attemptsCount">3</span>
+            </div>
+
+            <div class="blocked-message" id="blockedMessage">
+                ⚠️ Account Blocked! Too many failed attempts.
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <div class="popup-icon" id="popupIcon"></div>
+        <div class="popup-message" id="popupMessage"></div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+           <div id="server-message" data-message="{{ message }}" style="display: none;"></div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='notifications.css') }}">
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='login.js') }}"></script>
+</body>
+</html>

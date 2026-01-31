@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Money</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='send_money.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* Added internal style for the error alert to ensure it looks right without editing CSS file */
+        .alert-message {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(220, 53, 69, 0.2); /* Red background */
+            border: 1px solid rgba(220, 53, 69, 0.5); /* Red border */
+            color: #ff6b6b; /* Light red text */
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="aurora">
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="back-button">
+        <span class="arrow">&leftarrow;</span> Back to Dashboard
+    </a>
+    <div class="container">
+        <div>
+            <h1>Secure Transfer</h1>
+            
+            <div class="transfer-grid">
+                
+                <div class="card">
+                    <div class="card-title">Initiate Transaction</div>
+                    
+                    <form id="transferForm" action="{{ url_for('perform_transaction') }}" method="POST">
+                        
+                        <div class="form-group">
+                            <label class="form-label">Transfer Speed & Security</label>
+                            <div class="segmented-control">
+                                <input type="radio" id="instant" name="mode" value="fast" checked>
+                                <label for="instant" title="10 seconds, non-encrypted">Fast (Unencrypted)</label>
+                                
+                                <input type="radio" id="standard" name="mode" value="standard">
+                                <label for="standard" title="1 minute, encrypted">Standard (Encrypted)</label>
+                                
+                                <div class="active-indicator"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="accountNumber" class="form-label">Recipient Account Number</label>
+                            <input type="text" id="accountNumber" name="receiver_account" class="form-control" placeholder="10-16 digit account number" required pattern="\d{10,16}" title="Must be 10 to 16 digits" oninput="updateSummary()">
+                        </div>
+                        
+                        <div class="form-group amount-input">
+                            <label for="amount" class="form-label">Amount ($)</label>
+                            <input type="number" id="amount" name="amount" class="form-control" placeholder="0.00" required min="1.00" step="0.01" oninput="updateSummary()">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="memo" class="form-label">Memo / Description (Optional)</label>
+                            <input type="text" id="memo" name="memo" class="form-control" placeholder="e.g., Rent, Invoice #, etc." maxlength="50">
+                        </div>
+                        
+                        <button type="submit" class="action-button" id="confirmButton">
+                            Confirm & Send Transfer
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Transaction Summary</div>
+                    <ul class="summary-details">
+                        <li class="summary-item">
+                            <span class="summary-label">From Account:</span>
+                            <span class="summary-value">Checking ({{ user.id }})</span>
+                        </li>
+                        <li class="summary-item">
+                            <span class="summary-label">Transfer Speed:</span>
+                            <span class="summary-value" id="summaryType">Fast</span>
+                        </li>
+                        <li class="summary-item">
+                            <span class="summary-label">Security:</span>
+                            <span class="summary-value" id="summarySecurity">Non-Encrypted</span>
+                        </li>
+                        <li class="summary-item">
+                            <span class="summary-label">Recipient Acct:</span>
+                            <span class="summary-value" id="summaryRecipientAcct">N/A</span>
+                        </li>
+                        <li class="summary-item total-cost">
+                            <span class="summary-label">Total Debit:</span>
+                            <span class="summary-value" id="summaryTotalDebit">$0.00</span>
+                        </li>
+                    </ul>
+                    
+                    {% with messages = get_flashed_messages() %}
+                      {% if messages %}
+                        <div class="alert-message">
+                          {% for message in messages %}
+                            <div>{{ message }}</div>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                    {% endwith %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <link rel="stylesheet" href="{{ url_for('static', filename='notifications.css') }}">
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='send_money.js') }}"></script>
+</body>
+</html>

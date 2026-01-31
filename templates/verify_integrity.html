@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='verify_integrity.css') }}">
+    <style>
+        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.8em; }
+        .badge-standard { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid #10b981; }
+        .badge-fast { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid #ef4444; }
+        .hash-code { font-family: monospace; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 4px; color: #a78bfa; font-size: 0.85em; display: inline-block; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: middle; }
+        
+        /* CSS Classes to replace inline styles */
+        .amount-standard { color: #4ade80 !important; }
+        .amount-fast { color: #fca5a5 !important; }
+    </style>
+</head>
+<body>
+    <div class="aurora">
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <a href="{{ url_for('dashboard') }}" class="back-nav">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Back to Dashboard
+            </a>
+
+            <h1 class="page-title">Transaction Integrity Ledger</h1>
+            
+            <div class="transaction-list">
+                {% if transactions|length == 0 %}
+                    <div style="text-align: center; padding: 40px; color: #888;">No transactions found in ledger.</div>
+                {% else %}
+                    {% for tx in transactions %}
+                    <!-- We pass the INDEX to the JS function via data-index attribute -->
+                    <div class="transaction-item" data-index="{{ loop.index0 }}" onclick="openVerification(this.dataset.index)">
+                        <div class="t-info">
+                            <h4>
+                                {% if tx.sender == user.id %} Sent to {{ tx.receiver }}
+                                {% else %} Received from {{ tx.sender }}
+                                {% endif %}
+                            </h4>
+                            <p>ID: {{ tx.id }}</p>
+                        </div>
+                        <div class="t-right">
+                            <!-- Use CSS classes for coloring -->
+                            <div class="t-amount {% if tx.mode == 'standard' %}amount-standard{% else %}amount-fast{% endif %}">
+                                {% if tx.mode == 'standard' %}🔒{% else %}⚡{% endif %} ${{ tx.final_amount }}
+                            </div>
+                            <div class="t-status">Click to Verify</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALS -->
+    <div class="modal-overlay" id="verifyModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Verify Transaction Integrity</h2>
+                <button class="close-btn" onclick="closeAllModals()">&times;</button>
+            </div>
+            <div class="data-group">
+                <span class="data-label">Transaction ID</span>
+                <div class="data-value received" id="modalTxnId">...</div>
+            </div>
+            <div class="data-group">
+                <span class="data-label">Data Block (Sender | Amount | Timestamp)</span>
+                <div class="data-value received" id="modalData">...</div>
+            </div>
+            <div class="data-group">
+                <span class="data-label">Immutable Hash (Stored Seal)</span>
+                <div class="data-value received" id="modalReceivedHash">...</div>
+            </div>
+            <button class="verify-btn" id="verifyBtn" onclick="processVerification()">
+                <span id="btnText">Verify Hash Match</span>
+                <div class="loader" id="btnLoader"></div>
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="successModal">
+        <div class="modal result-modal">
+            <div class="result-icon success-theme">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <h2 class="modal-title success-theme">VERIFIED</h2>
+            <p class="result-message">The calculated hash matches the integrity seal. Data is authentic.</p>
+            <div class="data-group">
+                <span class="data-label">Calculated Local Hash</span>
+                <div class="data-value" id="successHashDisplay">...</div>
+            </div>
+            <button class="verify-btn" onclick="closeAllModals()">Close</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="failModal">
+        <div class="modal result-modal">
+            <div class="result-icon error-theme">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <h2 class="modal-title error-theme">WARNING: NOT VERIFIED</h2>
+            <p class="result-message">Hash Mismatch! This transaction is not secure or was modified.</p>
+            <div class="data-group">
+                <span class="data-label">Calculated Local Hash (Mismatch)</span>
+                <div class="data-value" id="failHashDisplay" style="color:#ff4757; border-color:#ff4757;">...</div>
+            </div>
+            <button class="verify-btn" style="background:#ff4757;" onclick="closeAllModals()">Close</button>
+        </div>
+    </div>
+
+    <!-- PREPARE DATA FOR JAVASCRIPT -->
+    <!-- Put raw JSON in a non-executable script tag. 
+         'tojson' filter ensures valid double quotes for JSON parsing. -->
+    <script type="application/json" id="transactions-data">
+        {{ transactions_json | safe }}
+    </script>
+
+    <script>
+        // Parse the JSON content safely from the hidden script block above
+        try {
+            const dataElement = document.getElementById('transactions-data');
+            // Assign to window object to ensure it is accessible globally by the external JS file
+            window.transactions = JSON.parse(dataElement.textContent);
+        } catch (e) {
+            console.error("Error parsing transaction data:", e);
+            window.transactions = [];
+        }
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='notifications.css') }}">
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='verify_integrity.js') }}"></script>
+</body>
+</html>

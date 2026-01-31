@@ -1,0 +1,289 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1a1a1a;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Neon Northern Lights Animation */
+.aurora {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.aurora-wave {
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(138, 43, 226, 0.3) 15%,
+        rgba(147, 51, 234, 0.5) 30%,
+        rgba(168, 85, 247, 0.4) 45%,
+        rgba(138, 43, 226, 0.3) 60%,
+        transparent 100%);
+    filter: blur(40px);
+    animation: wave1 12s ease-in-out infinite;
+    opacity: 0.8;
+}
+
+.aurora-wave:nth-child(2) {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(168, 85, 247, 0.4) 20%,
+        rgba(192, 132, 252, 0.6) 40%,
+        rgba(168, 85, 247, 0.5) 60%,
+        rgba(138, 43, 226, 0.3) 80%,
+        transparent 100%);
+    filter: blur(50px);
+    animation: wave2 18s ease-in-out infinite reverse;
+    top: 15%;
+}
+
+.aurora-wave:nth-child(3) {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(147, 51, 234, 0.35) 25%,
+        rgba(168, 85, 247, 0.55) 50%,
+        rgba(147, 51, 234, 0.35) 75%,
+        transparent 100%);
+    filter: blur(45px);
+    animation: wave3 15s ease-in-out infinite;
+    top: 30%;
+}
+
+.aurora-wave:nth-child(4) {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(192, 132, 252, 0.3) 20%,
+        rgba(168, 85, 247, 0.45) 50%,
+        rgba(138, 43, 226, 0.35) 80%,
+        transparent 100%);
+    filter: blur(60px);
+    animation: wave1 20s ease-in-out infinite;
+    top: 50%;
+}
+
+@keyframes wave1 {
+    0%, 100% { transform: translateX(-50%) translateY(0) skewY(2deg); }
+    50% { transform: translateX(-20%) translateY(-30px) skewY(-2deg); }
+}
+
+@keyframes wave2 {
+    0%, 100% { transform: translateX(-30%) translateY(0) skewY(-1deg); }
+    50% { transform: translateX(-60%) translateY(25px) skewY(1deg); }
+}
+
+@keyframes wave3 {
+    0%, 100% { transform: translateX(-40%) translateY(0) skewY(1.5deg); }
+    50% { transform: translateX(-25%) translateY(-20px) skewY(-1.5deg); }
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background: rgba(45, 45, 45, 0.95);
+    backdrop-filter: blur(10px);
+    border-right: 2px solid rgba(168, 85, 247, 0.3);
+    padding: 30px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-item {
+    padding: 20px 30px;
+    color: #c0c0c0;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+    transform-origin: left center;
+}
+
+.sidebar-item:hover, .sidebar-item.active {
+    background: rgba(168, 85, 247, 0.15);
+    color: #a855f7;
+    border-left-color: #a855f7;
+    text-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+    font-weight: 600;
+}
+
+.sidebar-item:hover {
+    transform: scale(1.05);
+}
+
+.sidebar-item.signout {
+    margin-top: auto;
+    color: #ff6b6b;
+}
+
+.sidebar-item.signout:hover {
+    background: rgba(255, 107, 107, 0.15);
+    color: #ff6b6b;
+    border-left-color: #ff6b6b;
+    text-shadow: 0 0 15px rgba(255, 107, 107, 0.6);
+    transform: scale(1.05);
+    font-weight: 600;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 40px 60px;
+}
+
+/* Balance Section */
+.balance-section {
+    background: rgba(45, 45, 45, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(168, 85, 247, 0.3);
+    border-radius: 20px;
+    padding: 30px 40px;
+    margin-bottom: 50px;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.account-number {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    background: rgba(30, 30, 30, 0.9);
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.account-number-label {
+    font-size: 0.8em;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.account-number-value {
+    font-size: 1.1em;
+    color: #a855f7;
+    font-weight: 600;
+    text-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
+}
+
+.balance-display {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.balance-label {
+    font-size: 1.2em;
+    color: #888;
+    margin-bottom: 15px;
+}
+
+.balance-amount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.balance-value {
+    font-size: 3em;
+    color: #a855f7;
+    font-weight: 700;
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+    letter-spacing: 2px;
+}
+
+.balance-value.hidden {
+    font-size: 2em; /* Smaller font for hidden/obscured text */
+}
+
+.eye-button {
+    background: rgba(168, 85, 247, 0.15);
+    border: none;
+    border-radius: 12px;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.5em;
+    color: #a855f7;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.2);
+}
+
+.eye-button:hover {
+    background: rgba(168, 85, 247, 0.25);
+    box-shadow: 0 6px 25px rgba(168, 85, 247, 0.4);
+    transform: translateY(-2px);
+}
+
+.eye-button svg {
+    width: 28px;
+    height: 28px;
+    filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.5));
+}
+
+/* Action Cards */
+.action-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.action-card {
+    background: rgba(45, 45, 45, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(168, 85, 247, 0.3);
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    border-color: #a855f7;
+    box-shadow: 0 15px 40px rgba(168, 85, 247, 0.3);
+    background: rgba(50, 50, 50, 0.95);
+}
+
+.action-icon {
+    font-size: 3.5em;
+    margin-bottom: 20px;
+    color: #a855f7;
+    text-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+}
+
+.action-card:hover .action-icon {
+    text-shadow: 0 0 25px rgba(168, 85, 247, 0.8);
+}
+
+.action-title {
+    font-size: 1.4em;
+    color: #a855f7;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+}

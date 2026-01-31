@@ -1,0 +1,95 @@
+/* Notification Container */
+.notif-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* The Card */
+.notif-card {
+    background: rgba(20, 20, 25, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-left: 4px solid #a855f7; /* Purple accent */
+    border-radius: 12px;
+    width: 320px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    padding: 0;
+    overflow: hidden;
+    transform: translateX(120%); /* Hidden by default */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-bottom: 10px;
+}
+
+.notif-card.show {
+    transform: translateX(0);
+}
+
+.notif-card.received { border-left-color: #4ade80; } /* Green for money in */
+.notif-card.sent { border-left-color: #f87171; } /* Red for money out */
+
+/* Header */
+.notif-header {
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.notif-title {
+    font-weight: 700;
+    font-size: 0.9em;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.notif-close {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: 0.2s;
+}
+.notif-close:hover { opacity: 1; }
+
+/* Body */
+.notif-body {
+    padding: 16px;
+}
+
+.notif-amount {
+    font-size: 1.8em;
+    font-weight: 800;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.text-green { color: #4ade80; }
+.text-red { color: #f87171; }
+
+.notif-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    margin-bottom: 6px;
+    color: #ccc;
+}
+
+.notif-label { color: #888; }
+.notif-value { font-weight: 600; text-align: right; }
+
+.notif-footer {
+    font-size: 0.75em;
+    color: #666;
+    margin-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 8px;
+    display: flex;
+    justify-content: space-between;
+}

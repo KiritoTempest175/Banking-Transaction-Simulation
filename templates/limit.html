@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Limits</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='limit.css') }}"> 
+</head>
+<body>
+    <div class="aurora">
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-item" onclick="window.location.href='/dashboard'">Dashboard</div>
+            <div class="sidebar-item" onclick="window.location.href='/personal_details'">Details</div>
+            
+            <div class="sidebar-item active">Limit</div> 
+            
+            <div class="sidebar-item" onclick="window.location.href='/download_transcript'">Download Transcript</div>
+            <div class="sidebar-item signout" onclick="window.location.href='/logout'">Sign Out</div>
+        </div>
+
+        <div class="main-content">
+            
+            <div class="page-header">
+                <h1 class="page-title">💳 Transaction Limits</h1>
+                <p class="page-subtitle">Manage your daily and monthly spending limits.</p>
+            </div>
+
+            <div class="limits-grid">
+                
+                <div class="limit-card">
+                    <div class="limit-header">
+                        <div class="limit-icon-title">
+                            <svg class="limit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                            <span class="limit-name">Online Payments</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked id="switch-online">
+                            <span class="slider-switch"></span>
+                        </label>
+                    </div>
+
+                    <div class="usage-info">
+                        <div class="usage-labels">
+                            <span>Used Today</span>
+                            <span class="usage-amount">$1,240 / <span id="display-online">5,000</span></span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: 25%"></div> 
+                        </div>
+                    </div>
+
+                    <div class="range-container">
+                        <div class="limit-value-display">$<span id="val-online">5,000</span></div>
+                        <input type="range" min="0" max="10000" step="100" value="5000" id="range-online" class="neon-slider">
+                    </div>
+                </div>
+
+                <div class="limit-card">
+                    <div class="limit-header">
+                        <div class="limit-icon-title">
+                            <svg class="limit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                                <circle cx="12" cy="12" r="2"></circle>
+                                <path d="M6 12h.01M18 12h.01"></path>
+                            </svg>
+                            <span class="limit-name">ATM Withdrawal</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked id="switch-atm">
+                            <span class="slider-switch"></span>
+                        </label>
+                    </div>
+
+                    <div class="usage-info">
+                        <div class="usage-labels">
+                            <span>Used Today</span>
+                            <span class="usage-amount">$200 / <span id="display-atm">1,000</span></span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: 20%"></div>
+                        </div>
+                    </div>
+
+                    <div class="range-container">
+                        <div class="limit-value-display">$<span id="val-atm">1,000</span></div>
+                        <input type="range" min="0" max="5000" step="50" value="1000" id="range-atm" class="neon-slider">
+                    </div>
+                </div>
+
+                <div class="limit-card">
+                    <div class="limit-header">
+                        <div class="limit-icon-title">
+                            <svg class="limit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            </svg>
+                            <span class="limit-name">International</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="switch-intl">
+                            <span class="slider-switch"></span>
+                        </label>
+                    </div>
+
+                    <div class="usage-info">
+                        <div class="usage-labels">
+                            <span>Used Today</span>
+                            <span class="usage-amount">$0 / <span id="display-intl">2,000</span></span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="range-container">
+                        <div class="limit-value-display">$<span id="val-intl">2,000</span></div>
+                        <input type="range" min="0" max="15000" step="100" value="2000" id="range-intl" class="neon-slider">
+                    </div>
+                </div>
+
+                   <div class="limit-card">
+                    <div class="limit-header">
+                        <div class="limit-icon-title">
+                            <svg class="limit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                <line x1="1" y1="10" x2="23" y2="10"></line>
+                            </svg>
+                            <span class="limit-name">POS / Swiping</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked id="switch-pos">
+                            <span class="slider-switch"></span>
+                        </label>
+                    </div>
+
+                    <div class="usage-info">
+                        <div class="usage-labels">
+                            <span>Used Today</span>
+                            <span class="usage-amount">$450 / <span id="display-pos">3,000</span></span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: 15%"></div>
+                        </div>
+                    </div>
+
+                    <div class="range-container">
+                        <div class="limit-value-display">$<span id="val-pos">3,000</span></div>
+                        <input type="range" min="0" max="10000" step="100" value="3000" id="range-pos" class="neon-slider">
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="save-btn">Update Limits</button>
+
+        </div>
+    </div>
+    <link rel="stylesheet" href="{{ url_for('static', filename='notifications.css') }}">
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='limit.js') }}"></script>
+</body>
+</html>

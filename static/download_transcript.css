@@ -1,0 +1,287 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Improved Font Stack for professional readability */
+body {
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1a1a1a;
+    min-height: 100vh;
+    height: 100vh;
+    overflow: hidden; 
+    position: relative;
+}
+
+/* Neon Northern Lights Animation (Kept) */
+.aurora {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.aurora-wave {
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(138, 43, 226, 0.3) 15%,
+        rgba(147, 51, 234, 0.5) 30%,
+        rgba(168, 85, 247, 0.4) 45%,
+        rgba(138, 43, 226, 0.3) 60%,
+        transparent 100%);
+    filter: blur(40px);
+    animation: wave1 12s ease-in-out infinite;
+    opacity: 0.8;
+}
+
+.aurora-wave:nth-child(2) {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(168, 85, 247, 0.4) 20%,
+        rgba(192, 132, 252, 0.6) 40%,
+        rgba(168, 85, 247, 0.5) 60%,
+        rgba(138, 43, 226, 0.3) 80%,
+        transparent 100%);
+    filter: blur(50px);
+    animation: wave2 18s ease-in-out infinite reverse;
+    top: 15%;
+}
+
+.aurora-wave:nth-child(3) {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(147, 51, 234, 0.35) 25%,
+        rgba(168, 85, 247, 0.55) 50%,
+        rgba(147, 51, 234, 0.35) 75%,
+        transparent 100%);
+    filter: blur(45px);
+    animation: wave3 15s ease-in-out infinite;
+    top: 30%;
+}
+
+.aurora-wave:nth-child(4) {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(192, 132, 252, 0.3) 20%,
+        rgba(168, 85, 247, 0.45) 50%,
+        rgba(138, 43, 226, 0.35) 80%,
+        transparent 100%);
+    filter: blur(60px);
+    animation: wave1 20s ease-in-out infinite;
+    top: 50%;
+}
+
+@keyframes wave1 {
+    0%, 100% {
+        transform: translateX(-50%) translateY(0) skewY(2deg);
+    }
+    50% {
+        transform: translateX(-20%) translateY(-30px) skewY(-2deg);
+    }
+}
+
+@keyframes wave2 {
+    0%, 100% {
+        transform: translateX(-30%) translateY(0) skewY(-1deg);
+    }
+    50% {
+        transform: translateX(-60%) translateY(25px) skewY(1deg);
+    }
+}
+
+@keyframes wave3 {
+    0%, 100% {
+        transform: translateX(-40%) translateY(0) skewY(1.5deg);
+    }
+    50% {
+        transform: translateX(-25%) translateY(-20px) skewY(-1.5deg);
+    }
+}
+/* End Aurora styles */
+
+.container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    height: 100%; 
+}
+
+/* Sidebar - Consistent Styling */
+.sidebar {
+    width: 250px;
+    background: rgba(45, 45, 45, 0.95);
+    backdrop-filter: blur(10px);
+    border-right: 2px solid rgba(168, 85, 247, 0.3);
+    padding: 30px 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.sidebar-item {
+    padding: 15px 30px; 
+    color: #c0c0c0;
+    font-size: 1.0em; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+    transform-origin: left center;
+}
+
+.sidebar-item:hover, .sidebar-item.active {
+    background: rgba(168, 85, 247, 0.15);
+    color: #a855f7;
+    border-left-color: #a855f7;
+    text-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+    transform: scale(1.05);
+    font-weight: 600;
+}
+
+.sidebar-item[data-page="download"] {
+    background: rgba(168, 85, 247, 0.15);
+    color: #a855f7;
+    border-left-color: #a855f7;
+    text-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+    font-weight: 600;
+}
+
+.sidebar-item.signout {
+    margin-top: auto;
+    color: #ff6b6b;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 30px 50px; 
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    color: #fff;
+    margin-bottom: 20px; 
+    font-size: 2.2em; 
+    border-bottom: 3px solid rgba(168, 85, 247, 0.5);
+    padding-bottom: 8px; 
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+}
+
+.card {
+    background: rgba(45, 45, 45, 0.95);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(168, 85, 247, 0.3);
+    border-radius: 15px; 
+    padding: 30px; 
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    max-width: 700px; 
+    margin: auto; 
+}
+
+.card-title {
+    color: #a855f7;
+    font-size: 1.6em; 
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed rgba(168, 85, 247, 0.2);
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+/* --- PROFESSIONAL FORM AESTHETICS --- */
+.form-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px; /* Slightly reduced spacing */
+    padding: 8px 0; /* Clearer vertical separation */
+    /* Removed border-bottom for cleaner look */
+}
+
+.form-label {
+    color: #c0c0c0;
+    font-size: 1.05em; /* Slightly adjusted size */
+    font-weight: 600; /* Bolder label for professional feel */
+    width: 40%;
+    text-align: left;
+}
+
+.form-control {
+    background: #252525; /* Darker input background */
+    border: 1px solid #4a4a4a; /* Subtler default border */
+    border-radius: 4px;
+    padding: 10px 12px; /* Increased vertical padding */
+    color: #fff;
+    font-size: 1.0em;
+    width: 55%;
+    transition: all 0.2s ease-in-out;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #a855f7;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+    background: #2c2c2c;
+}
+
+/* Styling for select/dropdown menus - simplified arrow */
+select.form-control {
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 30px; 
+    /* Simplified custom arrow in a professional grey */
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23c0c0c0" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592c.859 0 1.319 1.013.753 1.659l-4.796 5.483c-.58.663-1.464.663-2.043 0z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+}
+
+
+.action-button {
+    background: #a855f7;
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 5px; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+    margin-top: 30px;
+    width: 100%;
+    font-size: 1.1em;
+}
+
+.action-button:hover {
+    background: #9333ea;
+    box-shadow: 0 6px 25px rgba(168, 85, 247, 0.8);
+    transform: translateY(-2px);
+}
+
+/* Success Message Styling */
+.success-message {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(56, 161, 105, 0.2);
+    border: 1px solid #38a169;
+    color: #38a169;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    transition: opacity 0.5s ease;
+    opacity: 0;
+    display: none;
+}
+
+.success-message.visible {
+    opacity: 1;
+    display: block;
+}

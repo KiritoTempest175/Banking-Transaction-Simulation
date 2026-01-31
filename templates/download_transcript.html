@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Transcript</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='download_transcript.css') }}"> 
+</head>
+<body>
+    <div class="aurora">
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-item" onclick="window.location.href='/dashboard'">Dashboard</div>
+            <div class="sidebar-item" onclick="window.location.href='/personal_details'">Details</div>
+            <div class="sidebar-item" onclick="window.location.href='/limit'">Limit</div>
+            <div class="sidebar-item active" data-page="download">Download Transcript</div>
+            <div class="sidebar-item signout" onclick="window.location.href='/logout'">Sign Out</div>
+        </div>
+
+        <div class="main-content">
+            <h1>📄 Download Account Transcript</h1>
+            
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div style="background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                  {{ messages[0] }}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            <div class="card">
+                <div class="card-title">Transcript Generation Settings</div>
+                
+                <form id="transcriptForm" action="/generate_transcript" method="POST">
+                    <div class="form-group">
+                        <label for="startDate" class="form-label">Start Date</label>
+                        <input type="date" id="startDate" name="startDate" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endDate" class="form-label">End Date</label>
+                        <input type="date" id="endDate" name="endDate" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="format" class="form-label">Select Format</label>
+                        <select id="format" name="format" class="form-control">
+                            <option value="pdf">PDF (.pdf) - Recommended</option>
+                            <option value="txt">Text (.txt) - Simple Text</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="details" class="form-label">Include Account Details</label>
+                        <select id="details" name="details" class="form-control">
+                            <option value="yes">Yes (Full Details)</option>
+                            <option value="no">No (Transactions Only)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="action-button" id="downloadButton">
+                        Generate & Download Transcript
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='notifications.css') }}">
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
+    <script>
+        // Simple client-side validation or UI feedback
+        document.getElementById('transcriptForm').addEventListener('submit', function() {
+            const btn = document.getElementById('downloadButton');
+            const originalText = btn.textContent;
+            btn.textContent = 'Generating...';
+            btn.style.opacity = '0.7';
+            
+            // Reset button after a short delay (since download doesn't refresh page)
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.opacity = '1';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

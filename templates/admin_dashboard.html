@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='personal_details.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='notifications.css') }}">
+    <style>
+        /* Admin Styles */
+        .admin-table { width: 100%; border-collapse: separate; border-spacing: 0; color: #e2e8f0; }
+        
+        /* Sticky Header Fix */
+        .admin-table th { 
+            text-align: left; 
+            padding: 15px; 
+            background: #1e1e24; /* Solid color needed for sticky header */
+            color: #c4b5fd; 
+            border-bottom: 2px solid rgba(139, 92, 246, 0.3); 
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .admin-table td { padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); vertical-align: middle; }
+        
+        /* Scrollable Container */
+        .table-container {
+            max-height: 65vh; /* Restrict height to 65% of viewport */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border-radius: 0 0 10px 10px;
+        }
+
+        /* Custom Scrollbar */
+        .table-container::-webkit-scrollbar { width: 8px; }
+        .table-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        .table-container::-webkit-scrollbar-thumb { background: #8b5cf6; border-radius: 4px; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: #7c3aed; }
+
+        .btn-sm { padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-size: 0.85em; transition: 0.2s; }
+        .btn-approve { background: #8b5cf6; color: white; }
+        .btn-reject { background: transparent; border: 1px solid #ef4444; color: #ef4444; }
+        .btn-lock { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .btn-unlock { background: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+        .tamper-input { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 5px; border-radius: 4px; width: 80px; }
+        .sidebar-item.active { background: linear-gradient(90deg, rgba(139, 92, 246, 0.2), transparent); border-left: 3px solid #8b5cf6; }
+        .mode-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+        .mode-fast { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .mode-standard { background: rgba(52, 211, 153, 0.2); color: #6ee7b7; }
+        .hash-box { font-family: monospace; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 5px; color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.3); word-break: break-all; margin-bottom: 20px; }
+        
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <div class="aurora"><div class="aurora-wave"></div><div class="aurora-wave"></div><div class="aurora-wave"></div></div>
+    <div class="container">
+        <div class="sidebar">
+            <div style="padding: 20px; font-weight: bold; color: #c4b5fd; font-size: 0.9em; letter-spacing: 1px; text-transform: uppercase;">Admin Console</div>
+            <a href="{{ url_for('admin_dashboard', view='queue') }}" class="sidebar-item {{ 'active' if view == 'queue' }}">Queue Review</a>
+            <a href="{{ url_for('admin_dashboard', view='accounts') }}" class="sidebar-item {{ 'active' if view == 'accounts' }}">Manage Accounts</a>
+            <a href="{{ url_for('admin_dashboard', view='ledger') }}" class="sidebar-item {{ 'active' if view == 'ledger' }}">Full Ledger</a>
+            <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;"></div>
+            <a href="{{ url_for('personal_details') }}" class="sidebar-item">My Details</a>
+            <a href="{{ url_for('logout') }}" class="sidebar-item signout">Sign Out</a>
+        </div>
+
+        <div class="main-content">
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div style="margin-bottom: 20px; padding: 15px; background: rgba(139, 92, 246, 0.15); border: 1px solid #8b5cf6; border-radius: 8px; color: #e2e8f0;">
+                  {% for message in messages %}✓ {{ message }}{% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            {% if view == 'queue' %}
+            <h1>🛡️ Pending Transactions</h1>
+            <div class="card" style="width: 100%;">
+                <div class="card-title">Authorization Queue</div>
+                
+                <div id="empty-msg" style="padding: 40px; text-align: center; color: #94a3b8;" class="{% if queue|length > 0 %}hidden{% endif %}">
+                    <div style="font-size: 2em; margin-bottom: 10px;">✓</div>
+                    All caught up! No pending transactions.
+                </div>
+
+                <!-- ADDED SCROLL CONTAINER -->
+                <div class="table-container {% if queue|length == 0 %}hidden{% endif %}" id="queue-table-container">
+                    <table class="admin-table" id="queue-table">
+                        <thead><tr><th>Mode</th><th>Sender</th><th>Receiver</th><th>Amount</th><th>Action</th></tr></thead>
+                        <tbody id="queue-body">
+                            {% for tx in queue %}
+                            <tr>
+                                <td><span class="mode-badge mode-{{ tx.mode }}">{{ tx.mode|upper }}</span></td>
+                                <td>{{ tx.sender_id }}</td>
+                                <td>{{ tx.receiver_id }}</td>
+                                <td>
+                                    <form action="{{ url_for('admin_process') }}" method="POST" id="form-{{ tx.id }}">
+                                        <input type="hidden" name="tx_id" value="{{ tx.id }}">
+                                        <input type="hidden" name="action" value="approve">
+                                        {% if tx.mode == 'fast' %}
+                                            <input type="number" step="0.01" name="amount" value="{{ tx.amount }}" class="tamper-input">
+                                        {% else %}
+                                            <span style="color:#94a3b8;">🔒 ${{ tx.amount }}</span>
+                                            <input type="hidden" name="amount" value="{{ tx.amount }}">
+                                        {% endif %}
+                                    </form>
+                                </td>
+                                <td>
+                                    <div style="display: flex; gap: 10px;">
+                                        <button type="button" onclick="document.getElementById('form-{{ tx.id }}').submit()" class="btn-sm btn-approve">Approve</button>
+                                        <form action="{{ url_for('admin_process') }}" method="POST">
+                                            <input type="hidden" name="tx_id" value="{{ tx.id }}"><input type="hidden" name="action" value="reject">
+                                            <button type="submit" class="btn-sm btn-reject">Reject</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if view == 'accounts' %}
+            <h1>👥 User Management</h1>
+            <div class="card" style="width: 100%;">
+                <div class="card-title">System Users</div>
+                <!-- ADDED SCROLL CONTAINER -->
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead><tr><th>ID</th><th>Username</th><th>Role</th><th>Balance</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody>
+                            {% for key, acc in accounts.items() %}
+                            <tr>
+                                <td style="color:#c4b5fd;">{{ acc.account_id }}</td>
+                                <td>{{ acc.username }}</td>
+                                <td>{{ acc.role|capitalize }}</td>
+                                <td>${{ acc.balance }}</td>
+                                <td>{% if acc.is_locked %}<span style="color:#f87171;">LOCKED</span>{% else %}<span style="color:#4ade80;">Active</span>{% endif %}</td>
+                                <td>
+                                    {% if acc.role != 'admin' %}
+                                        <form action="{{ url_for('admin_toggle_lock', account_id=acc.account_id) }}" method="POST">
+                                            {% if acc.is_locked %}<button class="btn-sm btn-unlock">Unlock</button>{% else %}<button class="btn-sm btn-lock">Lock</button>{% endif %}
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if view == 'ledger' %}
+            <h1>📚 Master Ledger</h1>
+            <div class="card" style="width:100%; margin-bottom: 20px;">
+                <div class="card-title">System Integrity Status</div>
+                <p style="color:#aaa; font-size:0.9em; margin-bottom:5px;">Current Merkle Root Hash</p>
+                <div class="hash-box">{{ merkle_root }}</div>
+            </div>
+            <div class="card" style="width: 100%;">
+                <div class="card-title">Transaction History</div>
+                {% if ledger|length == 0 %}
+                    <div style="padding: 40px; text-align: center; color: #94a3b8;">Ledger is empty.</div>
+                {% else %}
+                    <!-- ADDED SCROLL CONTAINER -->
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead><tr><th>Timestamp</th><th>Sender</th><th>Receiver</th><th>Orig.</th><th>Final</th><th>Status</th></tr></thead>
+                            <tbody>
+                                {% for tx in ledger %}
+                                <tr>
+                                    <td style="font-size:0.85em; color:#94a3b8;">{{ tx.timestamp }}</td>
+                                    <td>{{ tx.sender }}</td>
+                                    <td>{{ tx.receiver }}</td>
+                                    <td style="color:#94a3b8;">${{ tx.original_amount }}</td>
+                                    <td>
+                                        {% if tx.original_amount != tx.final_amount %}
+                                            <span style="color:#f87171; font-weight:bold;">${{ tx.final_amount }} (Edited)</span>
+                                        {% else %}
+                                            <span style="color:#4ade80;">${{ tx.final_amount }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><span style="color:#c4b5fd;">APPROVED</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='admin_updates.js') }}"></script>
+    <script>
+        // Update JS to target container instead of table directly for visibility toggling
+        const originalRender = renderQueueTable; // Hook into existing if loaded
+        // Or ensure the JS file logic targets 'queue-table-container' if possible
+    </script>
+</body>
+</html>

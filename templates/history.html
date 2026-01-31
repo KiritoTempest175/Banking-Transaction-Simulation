@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='history.css') }}?v=999"> 
+</head>
+<body>
+    <div class="aurora">
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+        <div class="aurora-wave"></div>
+    </div>
+
+    <div class="container">
+        <a href="{{ url_for('dashboard') }}" class="back-button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Dashboard
+        </a>
+
+        <div class="main-content">
+            <h1 class="history-header">⏱️ Transaction History</h1>
+
+            <div class="filter-section">
+                <div class="filter-group">
+                    <button class="filter-button active">All Transactions</button>
+                    <button class="filter-button">Received</button>
+                    <button class="filter-button">Transfers</button>
+                </div>
+            </div>
+
+            <div class="sort-container-wrapper">
+                 <div class="sort-container">
+                    <button class="sort-btn" id="sortBtn">
+                        <span>Sort By</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                    <div class="sort-dropdown" id="sortDropdown">
+                        <div class="sort-option active" data-sort="newest">Newest First</div>
+                        <div class="sort-option" data-sort="oldest">Oldest First</div>
+                        <div class="sort-option" data-sort="highest">Amount: High to Low</div>
+                        <div class="sort-option" data-sort="lowest">Amount: Low to High</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="transaction-list">
+                {% for tx in transactions %}
+                <div class="transaction-item" 
+                     data-type="{% if tx.sender|string == user.id|string %}transfers{% else %}received{% endif %}"
+                     data-date="{{ tx.timestamp }}"
+                     data-amount="{{ tx.final_amount }}">
+                    
+                    <div class="transaction-details">
+                        <div class="transaction-title">
+                            {% if tx.sender|string == user.id|string %}
+                                Transfer to ...{{ tx.receiver[-4:] }}
+                            {% else %}
+                                Received from ...{{ tx.sender[-4:] }}
+                            {% endif %}
+                        </div>
+                        <div class="transaction-date">{{ tx.timestamp }}</div>
+                    </div>
+                    
+                    <div class="transaction-amount {% if tx.sender|string == user.id|string %}debit{% else %}credit{% endif %}">
+                        {% if tx.sender|string == user.id|string %}-{% else %}+{% endif %} 
+                        ${{ "%.2f"|format(tx.final_amount|float) }}
+                    </div>
+                </div>
+                {% else %}
+                <div class="no-transactions">No transactions found.</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='notifications.css') }}">
+    <script src="{{ url_for('static', filename='notifications.js') }}"></script>
+    
+    <script src="{{ url_for('static', filename='history.js') }}?v=999"></script>
+</body>
+</html>

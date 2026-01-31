@@ -1,0 +1,12 @@
+[
+    {
+        "id": "c241431f-f72a-4f6f-a6ef-af0b409628ff",
+        "sender_id": "1024607066",
+        "receiver_id": "1024607094",
+        "amount": 50.0,
+        "mode": "fast",
+        "timestamp": "2026-01-01 06:33:37",
+        "status": "PENDING",
+        "integrity_hash": null
+    }
+]
